@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+    <style>
+        .success, .error {
+            padding: 5px;
+            margin: 5px 0 15px 0;
+            border-radius: 10px;
+            border: 1px solid;
+        }
+        .success {
+            border-color: green;
+            color: green;
+        }
+        .error {
+            border-color: red;
+            color: red;
+        }
+        i {
+            margin-bottom: 5%;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html"><i class="fas fa-arrow-left" style="font-size:48px; color:blueviolet;"></i></a>
+        
+        <h2>Responsive Web Project List</h2>
+        <br>
+        <form id="list-form">
+            <div>
+                <label for="project-name">Project Name</label>
+                <input type="text" class="u-full-width" id="project-name">
+            </div>
+            <div>
+                <label for="start-time">Start Time</label>
+                <input type="text" class="u-full-width" id="start-time">
+            </div>
+            <div>
+                <label for="concepts">Concepts</label>
+                <input type="text" class="u-full-width" id="concepts">
+            </div>
+            <div>
+                <label for="status">Finished</label>
+                <input type="checkbox" id="status">
+            </div>
+            <div>
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+        <hr>
+        <table class="u-full-width">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Start Time</th>
+                    <th>Concepts</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="project-list"></tbody>
+        </table>
+    </div>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
