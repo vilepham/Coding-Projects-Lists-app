@@ -20,11 +20,12 @@ class UI {
         <td>${project.startTime}</td>
         <td>${project.concepts}</td>
         <td>${project.status}</td>
-        <td><a href="#" class="delete">x</a></td>`
+        <td><i style="font-size:20px" class="fa delete">&#xf00d;</i></td>`
+        if (project.status === false) {
+            row.innerHTML += `<td><i style="font-size:20px" class="fa finished">&#xf00c;</i></td>`
+        }
         // Append row to thread
         list.appendChild(row);
-
-        // storeInLocalStorage(row.textContent);
     }
 
     clearFields() {
@@ -54,43 +55,54 @@ class UI {
 // Local Storage Class
 class Storage {
     static getProjects() {
-        let projects;
-        if (localStorage.getItem('projects') === null) {
-            projects = [];
+        let websites;
+        if (localStorage.getItem('websites') === null) {
+            websites = [];
         } else {
-            projects = JSON.parse(localStorage.getItem('projects'));
+            websites = JSON.parse(localStorage.getItem('websites'));
         }
         
-        return projects;
+        return websites;
     }
 
     static displayProjects() {
-        const projects = Storage.getProjects();
+        const websites = Storage.getProjects();
 
-        projects.forEach(function(project) {
+        websites.forEach(function(website) {
             const ui = new UI();
-            ui.addProjectToList(project);
+            ui.addProjectToList(website);
         });
     }
 
-    static addProject(project) {
-        const projects = Storage.getProjects();
+    static addProject(website) {
+        const websites = Storage.getProjects();
 
-        projects.push(project)
+        websites.push(website)
 
-        localStorage.setItem('projects', JSON.stringify(projects));
+        localStorage.setItem('websites', JSON.stringify(websites));
     }
 
-    static removeProject(projectItem) {
-        const projects = Storage.getProjects();
+    static removeProject(concepts) {
+        const websites = Storage.getProjects();
         
-        projects.forEach(function(project, index) {
-            if (project.concepts === projectItem) {
-                projects.splice(index, 1);
+        websites.forEach(function(website, index) {
+            if (website.concepts === concepts) {
+                websites.splice(index, 1);
             }
         })
 
-        localStorage.setItem('projects', JSON.stringify(projects));
+        localStorage.setItem('websites', JSON.stringify(websites));
+    }
+    static replaceProject(concepts, status) {
+        const websites = Storage.getProjects();
+        
+        websites.forEach(function(website, index) {
+            if (website.concepts === concepts && website.status === status) {
+                websites.splice(index, 1);
+            }
+        })
+
+        localStorage.setItem('websites', JSON.stringify(websites));
     }
 }
 
@@ -122,7 +134,6 @@ document.getElementById('list-form').addEventListener('submit', function(e) {
 
         // Add to LS
         Storage.addProject(project);
-        console.log(Storage.addProject(project))
 
         // Clear input fields
         ui.clearFields();
@@ -138,8 +149,35 @@ document.body.addEventListener('click', function(e) {
             // Show success message
             ui.showAlert('Project deleted', 'success');
             // Remove from LS
-            Storage.removeProject(e.target.parentElement.previousElementSibling.previousElementSibling.textContent)
-            console.log(e.target.parentElement.previousElementSibling.previousElementSibling.textContent)
+            Storage.removeProject(e.target.parentElement.previousElementSibling.previousElementSibling.textContent, e.target.parentElement.previousElementSibling.textContent);
+            
         }
+    }
+});
+
+// Event Listener for change status button
+document.body.addEventListener('click', function(e) {
+    const ui = new UI();
+    if (e.target.classList.contains('finished')) {
+        e.target.parentElement.previousElementSibling.previousElementSibling.textContent = true;
+        e.target.parentElement.parentElement.remove();
+        // Show success message
+        ui.showAlert('Project updated', 'success');
+        // Update LS
+        const projectName = e.target.parentElement.parentElement.children[0].textContent;
+        const startTime = e.target.parentElement.parentElement.children[1].textContent;
+        const concepts = e.target.parentElement.parentElement.children[2].textContent;
+        const status = true;
+
+
+        const project = new Project(projectName, startTime, concepts, status);
+        
+        // Add project to list
+        ui.addProjectToList(project);
+
+        // Update LS by removing old status
+        Storage.addProject(project);
+        Storage.replaceProject(e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.textContent, false);
+
     }
 });
